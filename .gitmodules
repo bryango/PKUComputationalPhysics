@@ -1,0 +1,4 @@
+[submodule "PDFjs"]
+    path = assets/pdfjs-dist
+    url = https://github.com/mozilla/pdfjs-dist.git
+	shallow = true

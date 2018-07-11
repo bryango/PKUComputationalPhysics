@@ -15,6 +15,7 @@
 
 **Notes:**
 
+- 为使用 PDF 嵌入功能，需要 clone PDF.js, 详见 `assets/README.md`; 应该也可直接使用 `--recursive --shallow-submodules` 选项（我没试过）
 - 作业原题版权属于刘川老师与李强老师，不在此贴上（但答案往往足以自明）
 - 全功能的 `.ipynb` 文档请见 `ex5`, `ex6`, 本人初学 python, `ex1` 至 `ex3` 建议只读 <img src="https://bryango.github.io/assets/coolemoji/d_erha.png" width="24px"/>
 
