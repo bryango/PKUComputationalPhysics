@@ -1,0 +1,163 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      4965,        155]
+NotebookOptionsPosition[      4287,        131]
+NotebookOutlinePosition[      4633,        146]
+CellTagsIndexPosition[      4590,        143]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"hilbertMatrix", "[", "n_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{
+     FractionBox["1", 
+      RowBox[{"i", "+", "j", "-", "1"}]], "/.", 
+     RowBox[{"{", 
+      RowBox[{"i", "\[Rule]", 
+       RowBox[{"Range", "[", "n", "]"}]}], "}"}]}], "/.", 
+    RowBox[{"{", 
+     RowBox[{"j", "\[Rule]", 
+      RowBox[{"Range", "[", "n", "]"}]}], "}"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"hilbertSol", "[", "n_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{"Inverse", "[", 
+     RowBox[{"hilbertMatrix", "[", "n", "]"}], "]"}], ".", 
+    RowBox[{"Table", "[", 
+     RowBox[{"1", ",", "n"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"hilbertSol", "/@", 
+   RowBox[{"Range", "[", "10", "]"}]}], "//", "Grid"}]}], "Input",
+ CellChangeTimes->{{3.730342629509139*^9, 3.730342670923699*^9}, {
+  3.730342709239112*^9, 3.7303427416938543`*^9}, {3.7303429903902683`*^9, 
+  3.730343060520958*^9}, {3.730343100004733*^9, 3.730343143705922*^9}, {
+  3.730379119830007*^9, 
+  3.7303791219936132`*^9}},ExpressionUUID->"5331ed60-129a-43a3-b2bf-\
+4d64eaed4d4d"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"1", "", "", "", "", "", "", "", "", ""},
+    {
+     RowBox[{"-", "2"}], "6", "", "", "", "", "", "", "", ""},
+    {"3", 
+     RowBox[{"-", "24"}], "30", "", "", "", "", "", "", ""},
+    {
+     RowBox[{"-", "4"}], "60", 
+     RowBox[{"-", "180"}], "140", "", "", "", "", "", ""},
+    {"5", 
+     RowBox[{"-", "120"}], "630", 
+     RowBox[{"-", "1120"}], "630", "", "", "", "", ""},
+    {
+     RowBox[{"-", "6"}], "210", 
+     RowBox[{"-", "1680"}], "5040", 
+     RowBox[{"-", "6300"}], "2772", "", "", "", ""},
+    {"7", 
+     RowBox[{"-", "336"}], "3780", 
+     RowBox[{"-", "16800"}], "34650", 
+     RowBox[{"-", "33264"}], "12012", "", "", ""},
+    {
+     RowBox[{"-", "8"}], "504", 
+     RowBox[{"-", "7560"}], "46200", 
+     RowBox[{"-", "138600"}], "216216", 
+     RowBox[{"-", "168168"}], "51480", "", ""},
+    {"9", 
+     RowBox[{"-", "720"}], "13860", 
+     RowBox[{"-", "110880"}], "450450", 
+     RowBox[{"-", "1009008"}], "1261260", 
+     RowBox[{"-", "823680"}], "218790", ""},
+    {
+     RowBox[{"-", "10"}], "990", 
+     RowBox[{"-", "23760"}], "240240", 
+     RowBox[{"-", "1261260"}], "3783780", 
+     RowBox[{"-", "6726720"}], "7001280", 
+     RowBox[{"-", "3938220"}], "923780"}
+   },
+   AutoDelete->False,
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]], "Output",
+ CellChangeTimes->{{3.730343025111825*^9, 3.730343060946171*^9}, {
+   3.730343107447198*^9, 3.73034314412637*^9}, 3.730379074823814*^9, 
+   3.730379123727982*^9, 
+   3.7304195960838337`*^9},ExpressionUUID->"da2328c8-8abd-4ad9-b8d5-\
+55bfb74d15cf"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"1", "/", 
+    RowBox[{"Det", "[", 
+     RowBox[{"hilbertMatrix", "[", "#", "]"}], "]"}]}], "&"}], "/@", 
+  RowBox[{"Range", "[", "10", "]"}]}]], "Input",
+ CellChangeTimes->{{3.730345697525185*^9, 
+  3.730345851315508*^9}},ExpressionUUID->"1392c97f-4967-4ff2-85cc-\
+b9f1b718a5c8"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "1", ",", "12", ",", "2160", ",", "6048000", ",", "266716800000", ",", 
+   "186313420339200000", ",", "2067909047925770649600000", ",", 
+   "365356847125734485878112256000000", ",", 
+   "1028781784378569697887052962909388800000000", ",", 
+   "46206893947914691316295628839036278726983680000000000"}], "}"}]], "Output",\
+
+ CellChangeTimes->{{3.730345750969613*^9, 3.730345783782795*^9}, 
+   3.730345822484104*^9, 3.730345852675518*^9, 3.730379075182582*^9, 
+   3.730419598312355*^9},ExpressionUUID->"ac9855a5-00c1-440e-91cb-\
+39227be86a57"]
+}, Open  ]]
+},
+WindowSize->{808, 621},
+WindowMargins->{{Automatic, 129}, {9, Automatic}},
+FrontEndVersion->"11.1 for Linux x86 (64-bit) (2017\:5e744\:670818\:65e5)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 1133, 31, 100, "Input", "ExpressionUUID" -> \
+"5331ed60-129a-43a3-b2bf-4d64eaed4d4d"],
+Cell[1716, 55, 1608, 45, 192, "Output", "ExpressionUUID" -> \
+"da2328c8-8abd-4ad9-b8d5-55bfb74d15cf"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3361, 105, 326, 9, 32, "Input", "ExpressionUUID" -> \
+"1392c97f-4967-4ff2-85cc-b9f1b718a5c8"],
+Cell[3690, 116, 581, 12, 135, "Output", "ExpressionUUID" -> \
+"ac9855a5-00c1-440e-91cb-39227be86a57"]
+}, Open  ]]
+}
+]
+*)
+

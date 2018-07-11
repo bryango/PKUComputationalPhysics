@@ -1,0 +1,35 @@
+# General
+.DS_Store
+*.log
+*.backup/
+backup/
+tmp/
+.git_corrupted/
+.git_backup/
+.package.tmp/
+
+# LaTeX shit
+*.aux
+*.bbl
+*.blg
+*.out
+*.synctex.gz
+
+# Py shit
+__pycache__/
+.ipynb_checkpoints/
+.ropeproject/
+
+# Hide MMA
+wolfram/
+# ... except for ex1/
+!ex1/wolfram/
+
+# Homework extras
+2017_Ex*.pdf
+*ref.pdf
+*example.ipynb
+*example.py
+h*code/
+*.zip
+*_release/

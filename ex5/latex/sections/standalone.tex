@@ -1,0 +1,27 @@
+\input{../packages.tex}
+% Keep parindent
+	\usepackage{etoolbox}
+	\edef\parindentkept{\the\parindent}
+	\edef\parskipkept{\the\parskip}
+	\patchcmd{\preview}
+	  {\ignorespaces} %%% \preview ends with \ignorespaces
+	  {\parindent\parindentkept%
+	  \parskip\parskipkept%
+	  \ignorespaces}
+	  {}{}
+% Show footnote
+	\let\purefootnote\footnote
+	\newcommand{\showfootnote}{}
+	\renewcommand{\footnote}[1]{%
+		\purefootnote{#1}%
+		\renewcommand{\showfootnote}{{%
+			\par
+			\noindent\footnotesize%
+			\lefthand\ %
+			[\number\value{footnote}]\ 
+			\textit{#1}}%
+	}}
+% Standalone extras
+	\newcommand{\morewhite}{\par\vspace{16\baselineskip}
+		\newparagraph}
+	\newcommand{\onelevelup}{../}

@@ -1,0 +1,82 @@
+\documentclass[preview,10pt,border=8pt]{standalone}
+\input{standalone.tex}
+\input{../macros.tex}
+
+\renewcommand{\thesection}{1.a}
+\renewcommand{\thesubsection}{\roman{subsection}.}
+\begin{document}
+	这里从理论上给出QR分解的算法复杂度。由于我们只关心领头阶的贡献，故下述讨论中均记$(n - \mrm{const.}) \sim n$; 例如，对行、列指标的求和有时只有$(n-1)$项，但为简单起见，下面统一写为$\sum^n$. 此外，假定加减、乘除对运算量的贡献均为 1; 对于现代CPU而言，这一假定基本上是成立的\footnote{%
+		参见 \tup{\url{https://stackoverflow.com/a/39720217}}. }。
+	\showfootnote
+\subsection{Householder方法}
+	\begin{itemize}
+	\item 逐列循环$\sum_k^n$: 
+	\begin{itemize}
+	\item 考察对角元及以下元素，构成子空间矢量$x$; 构造$(n-k+1)\sim (n-k)$维Householder变换，大致需进行如下操作：
+	\begin{itemize}
+	\item 求模方$\norm{x}^2$, 复杂度$\order\big{2(n-k)}$; 
+	\item 据$x$构造变换矢量$v$, $\order{1}$; 
+	\item 求$\norm{v}^2$, 利用$\norm{x}^2$, 仅需$\order{1}$. 
+	\end{itemize}
+	这一步共需计算量$\order\big{2(n-k)}$. 
+	\item 对$\sim (n-k)$维子空间作用Householder变换$H = \idty - 2vv^\mrm{T}/\norm{v}^2$, 
+	\begin{itemize}
+	\item 首先看$v^\mrm{T}$, 作用在$(n-k)$维子空间上，$\order\big{2(n-k)^2}$; 
+	\item $H = \idty - 2vv^\mrm{T}/\norm{v}^2$, 表面上看还需$\order\big{4(n-k)^2}$; 但实际可对每一行$i$先计算系数$2v_i/\norm{v}^2$, 这样计算量可削减为$\order\big{2(n-k)^2}$. 
+	\end{itemize}
+	这一步共$\order\big{4(n-k)^2}$. 
+	\end{itemize}
+	这样便得到了QR分解后的$R$矩阵，
+	\begin{equation}
+		\textit{计算量} \sim \sum_k^n 4\,(n-k)^2
+		\sim \frac{4}{3}\,n^3
+	\end{equation}
+	某些参考材料给出$\order{\frac{2}{3}\,n^3}$的计算量，那是仅考虑了乘法计算的结果\footnote{参见  \tup{\url{https://en.wikipedia.org/wiki/QR\_decomposition\#Using\_Householder\_reflections}}. }。
+	\showfootnote
+	
+	事实上，到此为止我们已经完成了QR分解，只是没有显式地获得$Q$矩阵；但大部分情况下我们只需知道等价的Householder矢量$v$即可，无需显式地写出$Q$矩阵。
+	\item 若要进一步获得显式的$Q$矩阵，只需将Householder矩阵累乘即得；注意到Householder矩阵作用的子空间维数$(n-1), (n-2), \dots$顺次递减，完全类似，有：
+	\begin{equation}
+		\textit{计算量} \sim \sum_{k'}^n 4\,(k')^2
+		\sim \frac{4}{3}\,n^3
+	\end{equation}
+	即若要显式地得到$Q$, 总计算量为$\order{\frac{8}{3}\,n^3}$. 
+	\end{itemize}
+\subsection{Givens方法}
+	\begin{itemize}
+	\item 逐行循环$\sum_i^n$: 
+	\begin{itemize}
+	\item 对$j < i$逐列循环$\sum_j^i$: 
+	\begin{itemize}
+	\item 构造转动矩阵，$\order{1}$; 
+	\item 作用变换，仅会影响$i,j$两行；且前面的迭代已经保证$k < j < i$时$R_{ik} = R_{ij} = 0$，故只需$\order\big{6(n-j)}$; 这里的6即二维旋转的计算量。
+	\item 若还需显式求出$Q$矩阵，还需$\order{6i}$; 注意由于Givens变换局限在$\sim i$维子空间内，故只需$\sim 6i$而非$6n$步计算。
+	\end{itemize}
+	共$\order\big{6(n-j)} + \order{6i}$. 
+	\end{itemize}
+	\end{itemize}
+	求和可得：
+	\begin{equation}
+		\textit{计算量} \sim \sum_i^n \sum_j^i
+			\pqty\big{6(n-j) + 6i}
+		\sim \sum_i^n \pqty{(6ni - 3i^2)
+			+ 6i^2}
+		\sim 2n^3 + 2n^3
+		= 4n^3
+	\end{equation}
+	
+	\newparagraph
+	Householder和Givens的计算量（领头阶）综合比较如下：
+	\begin{equation*}
+	\begin{array}{l@{\hspace{2em}}c@{\hspace{1.5em}}c}
+	\toprule
+		\textit{方法} & \textit{求$R$} & \textit{同时给出显式$Q$} \\
+	\midrule
+		\tup{Householder} & \frac{4}{3}\,n^3 & \frac{8}{3}\,n^3 \\
+		\tup{Givens} & 2n^3 & 4n^3 \\
+	\bottomrule
+	\end{array}
+	\end{equation*}
+	可见，两种方法的复杂度同阶，Givens要更高一些；且对任一种方法而言，若要显式地给出$Q$, 计算量差不多要翻倍。由此可得，最好的办法是用Householder矢量或Givens转动参数储存$Q$, 需要$Q$作用时再根据参数逐次作用。
+%\morewhite
+\end{document}

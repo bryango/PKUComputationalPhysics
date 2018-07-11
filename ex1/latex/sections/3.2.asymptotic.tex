@@ -1,0 +1,18 @@
+\documentclass[preview,10pt,border=8pt]{standalone}
+\input{standalone.tex}
+
+\addtocounter{section}{3}
+\begin{document}
+\begin{figure}[!t]
+	\centering
+	\hspace{2em}\includegraphics[width=.75\linewidth]{\onelevelup../wolfram/asymptoticPlot.pdf}
+	\caption*{$\ln\det H_n$的渐进行为\\
+		散点为精确值，\tup{Nice} 为完整的渐进表达式，
+			\tup{Rough} 为$- n^2 \ln 4$. 
+	}
+	\itshape
+	
+	注：\tup{Nice}表达式在$n = 1$处发散，
+		故只适用于$n \ge 2$. 
+\end{figure}
+\end{document}

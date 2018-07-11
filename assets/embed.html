@@ -1,0 +1,107 @@
+<!-- Source: https://mozilla.github.io/pdf.js/ -->
+<link rel="stylesheet" href="pdfjs-dist/web/pdf_viewer.css">
+<style>
+    body {
+        /* display: flex;
+        justify-content: center; */
+    }
+    #viewerContainer {
+        display: inline-block;
+        position: absolute;
+        width: 90%;
+        height: 95%;
+    }
+    .pdfViewer .page {
+        -o-border-image: unset;
+           border-image: unset;
+    }
+</style>
+
+
+<script src="pdfjs-dist/build/pdf.js"></script>
+<script src="pdfjs-dist/web/pdf_viewer.js"></script>
+
+<div id="viewerContainer" align="center">
+    <div id="viewer" class="pdfViewer"></div>
+</div>
+
+<script>
+    function getFilepath() {
+        try {
+            var src = window.frameElement.src;
+            var filepath = src.split("?file=")[1];
+            if(filepath == null){
+               return 'assets/maxwell.pdf';
+            }
+            return filepath;
+        } catch (e) {
+            return 'assets/maxwell.pdf';
+        }
+    }
+
+    pdf_url = getFilepath();
+    var url = '../' + pdf_url;
+
+    // Loaded via <script> tag, create shortcut to access PDF.js exports.
+    var pdfjs = window['pdfjs-dist/build/pdf'];
+    // The workerSrc property shall be specified.
+    pdfjs.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.js';
+
+    // Enable hyperlinks within PDF files.
+    var container = document.getElementById('viewerContainer');
+    var pdfLinkService = new pdfjsViewer.PDFLinkService();
+    // Setup viewer & hyperlinks
+    var pdfViewer = new pdfjsViewer.PDFViewer({
+      container: container,
+      linkService: pdfLinkService,
+    });
+    pdfLinkService.setViewer(pdfViewer);
+
+    // Scaling
+    container.addEventListener('pagesinit', function () {
+      // We can use pdfViewer now, e.g. let's change default scale.
+      pdfViewer.currentScaleValue = 'page-width';
+    });
+
+    // Asynchronous download of PDF
+    var loadingTask = pdfjs.getDocument({
+        url: url,
+        cMapUrl: 'pdfjs-dist/cmaps/',
+        cMapPacked: true
+    });
+    loadingTask.promise.then(function(pdfDocument) {
+        console.log('PDF loaded');
+
+        pdfViewer.setDocument(pdfDocument);
+        pdfLinkService.setDocument(pdfDocument, null);
+
+        // Fetch the first page & set dimensions accordingly
+        var pageNumber = 1;
+        var pdf = pdfDocument;
+        pdf.getPage(pageNumber).then(function(page) {
+            console.log('Page loaded');
+
+            // Prepare canvas using PDF page dimensions
+            var viewerCore = document.getElementById('viewer');
+            // Resize according to window width
+            // full width may be too wide; choose a factor < 1.0
+            viewerCore.width = window.innerWidth * 0.8;
+            var viewport = page.getViewport(
+                viewerCore.width / page.getViewport(1.0).width
+            );
+            // height determined by document
+            viewerCore.height = viewport.height;
+
+            try {
+                parent.$("iframe[class=PDFframe]").trigger("onload");
+                console.log('Height adjusted');
+            } catch (e) {
+                console.log('Not embeded; page height unchanged');
+
+        }
+      });
+    }, function (reason) {
+      // PDF loading error
+      console.error(reason);
+    });
+</script>

@@ -1,0 +1,66 @@
+\documentclass[preview,10pt,border=8pt]{standalone}
+\input{standalone.tex}
+\input{../macros.tex}
+
+\renewcommand{\thesection}{2.a}
+\renewcommand{\thesubsection}{\roman{subsection}.}
+\begin{document}
+	考虑一维原子链的振动，取周期边条件，有\footnote{%
+		注：$A$的分量能写为这一形式，当且仅当$N \ge 3$. $N = 2$时，编号$i \pm 1$原子等同，实际有：
+		\begin{equation*}
+			A = \pqty{
+			\begin{smallmatrix}
+				2 & -2 \\[.5ex]
+				-2 & 2 \\
+			\end{smallmatrix}}
+		\end{equation*}
+		$N = 1$时，模型退化为一个首尾相连的轻弹簧圈，不存在振动模式，$A = \mathbf{0}$. }：
+	\begin{equation}
+		\ddot{x} = -Ax,\quad
+		(-A)_{ij}
+		= \delta_{i-1,j} + \delta_{i+1,j} - 2\delta_{ij},\quad
+		x\in \mbb{C}(t)
+	\end{equation}
+	单频振动$x(t) = x\,e^{-i\omega t}$, 注意到
+		$\pdv[2]{t} e^{-i\omega t}
+		= (-i\omega)^2 e^{-i\omega t}
+		= -\omega^2 e^{-i\omega t}$, 可得：
+	\begin{equation}
+		Ax = \lambda x,\quad
+		\lambda = \omega^2,\quad
+		x \in\mbb{C}
+	\end{equation}
+	
+	采用固体物理中的符号约定，记平衡时原子间距为$a$, 则上式有平面波解：
+	\begin{equation}
+		x_n = e^{inaq},\quad
+		\lambda = \omega^2 = 4\sin^2\pqty{\frac{aq}{2}}
+	\end{equation}
+	其中波矢$q \in \frac{2\pi}{Na}\cdot\mbb{Z}$, 由周期性，可限制$aq\in(-\pi,\pi]$或$[-\pi,\pi)$, 恰给出$N$个模式；进一步，
+	\begin{equation}
+	\begin{gathered}
+		\lambda_{\max} =
+		\left\lbrace
+		\begin{aligned}
+			& 4\sin^2\pqty{\frac{\pi}{2}} = 4,
+				&&\textit{$N$为偶数，}\\[.5ex]
+			& 4\sin^2\pqty{\frac{\pi}{2} - \frac{\pi}{2N}}
+				= 4\cos^2\pqty{\frac{\pi}{2N}},
+				&&\textit{$N$为奇数，}
+		\end{aligned}
+		\right.\\[1.5ex]
+		x_n = 
+		\left\lbrace
+		\begin{aligned}
+			& e^{in\pi} = (-1)^n,
+				&&\textit{$N$为偶数，}\\[.5ex]
+			& (-1)^n \exp\pqty{-i\pi\,\frac{n}{N}},
+				&&\textit{$N$为奇数，}
+		\end{aligned}
+		\right.
+	\end{gathered}
+	\end{equation}
+	
+	\showfootnote
+%\morewhite
+\end{document}

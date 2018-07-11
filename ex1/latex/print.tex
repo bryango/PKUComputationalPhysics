@@ -1,0 +1,41 @@
+\documentclass[a4paper,10pt]{article}
+\input{packages.tex}
+\usepackage{standalone}
+
+%TitleSettings
+	\setlength{\droptitle}{-2cm}
+	\pretitle{\vspace{-5ex}%
+		\begin{flushleft}\LARGE\bfseries}
+	\posttitle{
+		\hfill\Large\ccbyncsajp
+		\par\end{flushleft}\hrule}
+	\preauthor{\vspace{-1ex}%
+		\flushleft\itshape}
+	\postauthor{\par}
+	\predate{}
+	\postdate{\vspace{-3.5ex}}
+%Title
+	\title{计算物理作业 \texttt{Ex01}}
+	\author{物理学院\ Bryan\thanks{%
+		邮箱：\url{pls_contact_via_github@fake_email.com}}\quad
+		学号：\!\textup{1500066666}}
+	\date{}
+% No standalone extras
+	\newcommand{\morewhite}{}
+	\newcommand{\onelevelup}{}
+
+\begin{document}
+\maketitle
+\pagestyle{headings}
+\pagenumbering{arabic}
+\thispagestyle{empty}
+\input{sections/1.1.error}
+\input{sections/2.1.matrix}
+\input{sections/3.1.hilbert}
+\input{sections/3.2.asymptotic}
+
+\clearpage
+%\bibliographystyle{apsrev4-1}
+%\setlength{\bibsep}{3pt}
+%\bibliography{cite}
+\end{document}
