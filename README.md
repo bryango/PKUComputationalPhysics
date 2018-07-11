@@ -1,6 +1,6 @@
 # PKU 计算物理作业 / Computational Physics
 > *Actually, not much physics...*<br/>
-> `ex1` 至 `ex3` 本质上 fork 自 @mirage0-0 大神，特此致谢！
+> `ex1` 至 `ex3` 本质上 fork 自 @[mirage0-0](https://github.com/mirage0-0) 大神，特此致谢！
 
 **Warnings:**
 
@@ -16,7 +16,7 @@
 **Notes:**
 
 - 作业原题版权属于刘川老师与李强老师，不在此贴上（但答案往往足以自明）
-- 全功能的 `.ipynb` 文档请见 `ex5`, `ex6`, 本人初学 python, `ex1` 至 `ex3` 建议只读 ![](https://bryango.github.io/assets/coolemoji/d_erha.png){:width="36px"}
+- 全功能的 `.ipynb` 文档请见 `ex5`, `ex6`, 本人初学 python, `ex1` 至 `ex3` 建议只读 <img src="https://bryango.github.io/assets/coolemoji/d_erha.png" width="24px"/>
 
 ## 项目结构：
 > `tree -d -I "build|web|__pycache__"`

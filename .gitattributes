@@ -1,4 +1,5 @@
 *.nb         linguist-documentation
+*.html       linguist-documentation
 *.ipynb      diff=nodiff
 *.csv        diff=nodiff
 *mini.html   diff=nodiff
