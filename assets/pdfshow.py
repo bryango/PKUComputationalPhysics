@@ -27,14 +27,14 @@ class pdfGet(object):
 
     def show(self):
         frameJS = f"""
-            <p style="font-size: 2px; font-style: italic; ">
+            <p style="font-size: 12px; font-style: italic; ">
                 See no PDF below?
                 Go to <a href="{self.pdfDir}">{self.pdfDir}</a> directly! </p>
             <iframe class="PDFframe" src='assets/embed.html?file={self.pdfDir}'
                 width="100%" frameborder="0" onload="PDFframeLoaded()" >
             </iframe>
         """ if pdfshowOption['mini'] is False else f"""
-            <p style="font-size: 2px; font-style: italic; ">
+            <p style="font-size: 12px; font-style: italic; ">
                 Mini mode activated!
                 Source: <a href="{self.pdfDir}">{self.pdfDir}</a></p>
             <iframe src="{self.pdfDir}#view=fitH"

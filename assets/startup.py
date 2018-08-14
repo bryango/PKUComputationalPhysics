@@ -15,6 +15,7 @@ import inspect
 
 class InlinePager(object):
     """ Inline pager """
+
     def __init__(self):
         self.truncation = (None, None)
         self.page_origin = page.page  # noqa: F841
@@ -65,7 +66,7 @@ class InlinePager(object):
         get_ipython().run_line_magic('pinfo2', stuff_to_query)   # noqa: F821
         print(re.search(
             f'(^.*# <{tag}>.*$)'
-            f'([\s\S]+?(?=(# </{tag}>)))'
+            fr'([\s\S]+?(?=(# </{tag}>)))'
             f'(# </{tag}>)',
             self.log['output'],
             flags=re.MULTILINE
@@ -176,22 +177,31 @@ def initialize():
                 white-space: nowrap;
             }
         </style>
-        <script>
-            IPython.OutputArea.prototype._should_scroll = function(lines) {
-                return false;
-            }
-        </script>
         """
 
-    # Bonus: inline highlighting with code-prettify
     get_ipython().run_cell_magic(  # noqa: F821
         'javascript', '',
-        """$([IPython.events]).on("rendered.MarkdownCell", function () {
+        """require(  //// Always expand output area (legacy but powerful hack)
+    ["notebook/js/outputarea"],
+    function (oa) {
+        oa.OutputArea.prototype._should_scroll = function(lines) {
+            return false;
+        }
+    }
+);
+require(  //// Setting auto_scroll_threshold to -1 (latest but not as good)
+    ["notebook/js/outputarea"],
+    function (oa) {
+        oa.OutputArea.auto_scroll_threshold = -1;
+    }
+);
+$([IPython.events]).on("rendered.MarkdownCell", function () {
     PR.prettyPrint();
-});
+});  //// Bonus: inline highlighting with code-prettify
 $([IPython.events]).on("output_appended.OutputArea", function () {
     IPython.notebook.save_notebook();
-});""")
+});  //// Auto-save whenever output is generated
+""")
 
     markdown_string = f'${mathjax_macros}$' \
         + html_style \
