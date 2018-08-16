@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-if __name__ != '__main__':
+if __name__ != '__main__':  # when IMPORTED
     startupOption = {
         'debug': False,
         'utilities': [
@@ -17,7 +17,12 @@ if __name__ != '__main__':
         'initialized': False
     }
 
-if __name__ == '__main__':
+    pdfshowOption = {
+        'mini': False,
+        'notebook_url': ''
+    }
+
+if __name__ == '__main__':  # when EXECUTED by assets.startup WITHIN ipynb
     try:
         for func in startupOption['utilities']:
             exec('from assets.startup import ' + func)

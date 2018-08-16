@@ -118,7 +118,7 @@ class LatticeMaxModes(object):
             marker='.', markersize=12, ax=ax, label='Numerical result')
 
         plt.xlabel(self.dataframe.columns.name, fontsize=16, labelpad=4.5)
-        plt.ylabel(r'\lambda_{\max}', fontsize=22.5, labelpad=8)
+        plt.ylabel(r'$\lambda_{\max}$', fontsize=22.5, labelpad=8)
 
         plt.tick_params(axis='both', which='major', labelsize=13.5, pad=5)
         plt.legend(loc='lower right', bbox_to_anchor=(.95, .08), fontsize=13.5)

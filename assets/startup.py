@@ -3,8 +3,8 @@
 
 from IPython.core import page
 from IPython.display import display, HTML, Markdown, clear_output
-from assets.specs import startupOption
-from assets.pdfshow import pdf_autoreload_script, pdfshowOption
+from assets.pdfshow import pdf_autoreload_script
+from assets.specs import startupOption, pdfshowOption
 import os
 import re
 import sys
@@ -18,7 +18,8 @@ class InlinePager(object):
 
     def __init__(self):
         self.truncation = (None, None)
-        self.page_origin = page.page  # noqa: F841
+        if not hasattr(self, 'page_origin'):
+            self.page_origin = page.page  # noqa: F841
         self.log = {'output': ''}
         self.truncate()
 
@@ -181,7 +182,32 @@ def initialize():
 
     get_ipython().run_cell_magic(  # noqa: F821
         'javascript', '',
-        """require(  //// Always expand output area (legacy but powerful hack)
+        """
+//// full url
+function full_url(relative_url) {
+    var link = document.createElement("a");
+    link.href = relative_url;
+    return (link.protocol+"//"+link.host+link.pathname+link.search+link.hash);
+}
+var root_url = full_url('/')
+
+//// `files` url
+function files_url(relative_url) {
+    var relative_to_root = full_url(relative_url).replace(
+        root_url, ''
+    ).replace(
+        'notebooks', 'files'
+    );
+    return (root_url + relative_to_root);
+}
+
+//// Get notebook `/files/` url
+var command = ('pdfshowOption["notebook_url"] = notebook_files = "'
+    + files_url('./') + '"');
+IPython.notebook.kernel.execute(command);
+
+//// Always expand output area (legacy but powerful hack)
+require(
     ["notebook/js/outputarea"],
     function (oa) {
         oa.OutputArea.prototype._should_scroll = function(lines) {
@@ -189,30 +215,37 @@ def initialize():
         }
     }
 );
-require(  //// Setting auto_scroll_threshold to -1 (latest but not as good)
+
+//// Setting auto_scroll_threshold to -1 (latest but not as good)
+require(
     ["notebook/js/outputarea"],
     function (oa) {
         oa.OutputArea.auto_scroll_threshold = -1;
     }
 );
+
+//// Bonus: inline highlighting with code-prettify
 $([IPython.events]).on("rendered.MarkdownCell", function () {
     PR.prettyPrint();
-});  //// Bonus: inline highlighting with code-prettify
+});
+
+//// Auto-save whenever output is generated
 $([IPython.events]).on("output_appended.OutputArea", function () {
     IPython.notebook.save_notebook();
-});  //// Auto-save whenever output is generated
+});
 """)
 
     markdown_string = f'${mathjax_macros}$' \
-        + html_style \
-        + pdf_autoreload_script().rstrip() \
-        + """<!--
-     --> `< Utilities initialized >`\n""" \
+        + """`< Utilities initialized >`\n""" \
         + "```python\n" \
         + ", ".join(startupOption['utilities']) \
         + "```"
 
     display(Markdown(markdown_string))
+    display(HTML(
+        html_style
+        + pdf_autoreload_script()
+    ))
 
     if startupOption['reveal']:
         print(markdown_string)
