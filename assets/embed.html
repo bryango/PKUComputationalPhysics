@@ -13,7 +13,7 @@
     }
     .pdfViewer .page {
         -o-border-image: unset;
-           border-image: unset;
+        border-image: unset;
     }
 </style>
 
@@ -28,10 +28,10 @@
 <script>
     function getFilepath() {
         try {
-            var src = window.frameElement.src;
+            var src = window.document.URL;
             var filepath = src.split("?file=")[1];
-            if(filepath == null){
-               return 'assets/maxwell.pdf';
+            if (filepath == null) {
+                return 'assets/maxwell.pdf';
             }
             return filepath;
         } catch (e) {
@@ -46,21 +46,21 @@
     var pdfjs = window['pdfjs-dist/build/pdf'];
     // The workerSrc property shall be specified.
     pdfjs.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.js';
-
     // Enable hyperlinks within PDF files.
     var container = document.getElementById('viewerContainer');
     var pdfLinkService = new pdfjsViewer.PDFLinkService();
     // Setup viewer & hyperlinks
     var pdfViewer = new pdfjsViewer.PDFViewer({
-      container: container,
-      linkService: pdfLinkService,
+        container: container,
+        linkService: pdfLinkService,
     });
+
     pdfLinkService.setViewer(pdfViewer);
 
     // Scaling
-    container.addEventListener('pagesinit', function () {
-      // We can use pdfViewer now, e.g. let's change default scale.
-      pdfViewer.currentScaleValue = 'page-width';
+    container.addEventListener('pagesinit', function() {
+        // We can use pdfViewer now, e.g. let's change default scale.
+        pdfViewer.currentScaleValue = 'page-width';
     });
 
     // Asynchronous download of PDF
@@ -68,7 +68,8 @@
         url: url,
         cMapUrl: 'pdfjs-dist/cmaps/',
         cMapPacked: true
-    });
+    }); // POINT OF FAILURE #1
+    console.log(pdfjs);
     loadingTask.promise.then(function(pdfDocument) {
         console.log('PDF loaded');
 
@@ -98,10 +99,10 @@
             } catch (e) {
                 console.log('Not embeded; page height unchanged');
 
-        }
-      });
-    }, function (reason) {
-      // PDF loading error
-      console.error(reason);
+            }
+        });
+    }, function(reason) {
+        // PDF loading error
+        console.log(reason);
     });
 </script>

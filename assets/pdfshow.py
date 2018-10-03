@@ -36,24 +36,20 @@ class pdfGet(object):
         )
 
     def show(self):
-        p_tag = '<p style="font-size: 12px; font-style: italic; ">'
+        p_tag = '<p style="font-size: 12px; font-style: italic;">'
         files_hyperlink = f'<a href="{self.fullDir}">{self.pdfDir}</a>'
         iframe_attrs = 'width="100%" frameborder="0"'
         embed_src = pdfshowOption['notebook_url'] + 'assets/embed.html'
         frameJS = f"""
-            {p_tag}
-                See no PDF below?
-                Go to {files_hyperlink} directly! </p>
-            <iframe class="PDFframe"
-                src='{embed_src}?file={self.pdfDir}'
-                {iframe_attrs} onload="PDFframeLoaded()" >
-            </iframe>
-        """ if pdfshowOption['mini'] is False else f"""
-            {p_tag}
-                Mini mode activated!
-                Source: {files_hyperlink}</p>
-            <iframe src="{self.fullDir}#view=fitH"
-                {iframe_attrs} height="360px" >
-            </iframe>
-        """
+{p_tag}See no PDF below? Go to {files_hyperlink} directly! </p>
+<iframe class="PDFframe"
+    src='{embed_src}?file={self.pdfDir}'
+    {iframe_attrs} onload="PDFframeLoaded()" >
+</iframe>
+""" if pdfshowOption['mini'] is False else f"""
+{p_tag}Mini mode activated! Source: {files_hyperlink}</p>
+<iframe src="{self.fullDir}#view=fitH"
+    {iframe_attrs} height="360px" >
+</iframe>
+"""
         display(HTML(frameJS))
