@@ -1,7 +1,11 @@
 // Thanks: https://stackoverflow.com/a/9163087
 
 function frameDynamicHeight(oneframe) {
-    oneframe.height = oneframe.contentWindow.document.body.scrollHeight + "px";
+    try {
+        oneframe.height = oneframe.contentWindow.document.body.scrollHeight + "px";
+    } catch(e) {
+        console.log("Failed to get height from frame:", oneframe);
+    }
 }
 
 function PDFframeLoaded() {

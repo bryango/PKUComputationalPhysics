@@ -18,6 +18,7 @@ class pdfGet(object):
         # Try to find a base url
         if pdfshowOption['notebook_url'] == '':
             try:
+                # `notebook_files` from `startup.py` javascript
                 pdfshowOption['notebook_url'] = notebook_files
             except NameError:
                 pass

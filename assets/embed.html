@@ -28,9 +28,14 @@
 <script>
     function getFilepath() {
         try {
-            var src = window.document.URL;
+            try { // best approach
+                var src = window.frameElement.src;
+            } catch (e) { // backup for cross domain issue
+                var src = window.document.URL;
+            }
             var filepath = src.split("?file=")[1];
             if (filepath == null) {
+                console.log("PDF path not specified:", src);
                 return 'assets/maxwell.pdf';
             }
             return filepath;
@@ -68,10 +73,9 @@
         url: url,
         cMapUrl: 'pdfjs-dist/cmaps/',
         cMapPacked: true
-    }); // POINT OF FAILURE #1
-    console.log(pdfjs);
+    });
     loadingTask.promise.then(function(pdfDocument) {
-        console.log('PDF loaded');
+        // console.log('PDF loaded');
 
         pdfViewer.setDocument(pdfDocument);
         pdfLinkService.setDocument(pdfDocument, null);
@@ -80,7 +84,7 @@
         var pageNumber = 1;
         var pdf = pdfDocument;
         pdf.getPage(pageNumber).then(function(page) {
-            console.log('Page loaded');
+            // console.log('Page loaded');
 
             // Prepare canvas using PDF page dimensions
             var viewerCore = document.getElementById('viewer');
@@ -97,12 +101,11 @@
                 parent.$("iframe[class=PDFframe]").trigger("onload");
                 console.log('Height adjusted');
             } catch (e) {
-                console.log('Not embeded; page height unchanged');
+                console.log('Page height unchanged; reason:', e);
 
             }
         });
     }, function(reason) {
-        // PDF loading error
-        console.log(reason);
+        console.log("PDF loading error:", reason);
     });
 </script>
