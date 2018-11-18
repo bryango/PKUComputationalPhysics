@@ -1,10 +1,10 @@
 <!-- Source: https://mozilla.github.io/pdf.js/ -->
 <link rel="stylesheet" href="pdfjs-dist/web/pdf_viewer.css">
 <style>
-    body {
-        /* display: flex;
-        justify-content: center; */
-    }
+    /* body {
+        display: flex;
+        justify-content: center;
+    } */
     #viewerContainer {
         display: inline-block;
         position: absolute;
@@ -22,10 +22,17 @@
 <script src="pdfjs-dist/web/pdf_viewer.js"></script>
 
 <div id="viewerContainer" align="center">
-    <div id="viewer" class="pdfViewer"></div>
+    <div id="viewer" class="pdfViewer">Placeholder</div>
 </div>
 
 <script>
+    // Listen for base64 data
+    window.pdf_url = window.pdfbase64 = "";
+    window.addEventListener('message', function(e) {{
+        window.pdf_url = e.data[0];
+        window.pdfbase64 = atob(e.data[1]);
+    }});
+
     function getFilepath() {
         try {
             try { // best approach
@@ -49,6 +56,7 @@
 
     // Loaded via <script> tag, create shortcut to access PDF.js exports.
     var pdfjs = window['pdfjs-dist/build/pdf'];
+    // var pdfjs = window.pdfjsDistBuildPdf;
     // The workerSrc property shall be specified.
     pdfjs.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.js';
     // Enable hyperlinks within PDF files.
@@ -69,43 +77,81 @@
     });
 
     // Asynchronous download of PDF
+    function pdfLoad(loadingTask, logMarker) {
+        loadingTask.promise.then(
+            function(pdfDocument) {
+                // console.log('PDF loaded!');
+
+                pdfViewer.setDocument(pdfDocument);
+                pdfLinkService.setDocument(pdfDocument, null);
+
+                // Fetch the first page & set dimensions accordingly
+                var pageNumber = 1;
+                var pdf = pdfDocument;
+                pdf.getPage(pageNumber).then(function(page) {
+                    // console.log('Page loaded!');
+
+                    // Prepare canvas using PDF page dimensions
+                    var viewerCore = document.getElementById('viewer');
+                    // Resize according to window width
+                    // full width may be too wide; choose a factor < 1.0
+                    viewerCore.width = window.innerWidth * 0.8;
+                    var viewport = page.getViewport(
+                        viewerCore.width / page.getViewport(1.0).width
+                    );
+                    // height determined by document
+                    viewerCore.height = viewport.height;
+
+                    try {
+                        parent.$("iframe[class=PDFframe]").trigger("onload");
+                        console.log('Height adjusted.');
+                    } catch (e) {
+                        if (logMarker == "Reload") {
+                            var data_pkg = [
+                                pdf_url, window.document.body.scrollHeight
+                            ];
+                            parent.postMessage(data_pkg, "*");
+                            console.log('Height posted:', data_pkg);
+                        } else {
+                            console.log('Page height unchanged; reason:', e);
+                        }
+                    }
+                });
+            },
+            function(reason) {
+                console.log(logMarker, "failed!");
+                parent.postMessage('based64request', "*");
+                loaded = false;
+            }
+        );
+        if (!loaded) {
+            return false;
+        }
+    }
+
     var loadingTask = pdfjs.getDocument({
         url: url,
         cMapUrl: 'pdfjs-dist/cmaps/',
         cMapPacked: true
     });
-    loadingTask.promise.then(function(pdfDocument) {
-        // console.log('PDF loaded');
 
-        pdfViewer.setDocument(pdfDocument);
-        pdfLinkService.setDocument(pdfDocument, null);
+    var loaded = pdfLoad(loadingTask, "First load");
 
-        // Fetch the first page & set dimensions accordingly
-        var pageNumber = 1;
-        var pdf = pdfDocument;
-        pdf.getPage(pageNumber).then(function(page) {
-            // console.log('Page loaded');
+    function pdfReload() {
+        if(window.pdfbase64 !== ""){
+            reloadTask = pdfjs.getDocument({
+                data: window.pdfbase64,
+                cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.943/cmaps/',
+                cMapPacked: true
+            });
+            pdfLoad(reloadTask, "Reload");
+        } else{  // Wait til pdfbase64 is retrieved
+            console.log("Waiting for base64 data...");
+            setTimeout(pdfReload, 250);
+        }
+    }
 
-            // Prepare canvas using PDF page dimensions
-            var viewerCore = document.getElementById('viewer');
-            // Resize according to window width
-            // full width may be too wide; choose a factor < 1.0
-            viewerCore.width = window.innerWidth * 0.8;
-            var viewport = page.getViewport(
-                viewerCore.width / page.getViewport(1.0).width
-            );
-            // height determined by document
-            viewerCore.height = viewport.height;
-
-            try {
-                parent.$("iframe[class=PDFframe]").trigger("onload");
-                console.log('Height adjusted');
-            } catch (e) {
-                console.log('Page height unchanged; reason:', e);
-
-            }
-        });
-    }, function(reason) {
-        console.log("PDF loading error:", reason);
-    });
+    if (!loaded) {
+        pdfReload();
+    }
 </script>
