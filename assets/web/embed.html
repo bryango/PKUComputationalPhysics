@@ -43,11 +43,11 @@
             var filepath = src.split("?file=")[1];
             if (filepath == null) {
                 console.log("PDF path not specified:", src);
-                return 'assets/maxwell.pdf';
+                return 'assets/web/maxwell.pdf';
             }
             return filepath;
         } catch (e) {
-            return 'assets/maxwell.pdf';
+            return 'assets/web/maxwell.pdf';
         }
     }
 

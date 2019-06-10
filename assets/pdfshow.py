@@ -8,8 +8,8 @@ import os.path
 import base64
 
 
-def pdf_autoreload_script():
-    return """<script src="assets/frame_loaded.js"></script>"""
+def pdf_autoreload_html():
+    return """<script src="assets/web/frame_loaded.js"></script>"""
 
 
 class pdfGet(object):
@@ -29,7 +29,7 @@ class pdfGet(object):
                 and os.path.splitext(pdf_dir)[-1].lower() == '.pdf'):
                     self.pdfDir = pdf_dir
         else:
-            self.pdfDir = 'assets/maxwell.pdf'
+            self.pdfDir = 'assets/web/maxwell.pdf'
 
         # Simply read data as base64
         with open(self.pdfDir, 'rb') as pdf_file:
@@ -69,7 +69,8 @@ Blame jupyter! </a></p>"""
 
         files_hyperlink = f'<a href="{self.fullDir}">{self.pdfDir}</a>'
         iframe_attrs = f'width="100%" frameborder="0" name="{self.pdfDir}"'
-        embed_src = pdfshowOption['notebook_url'] + 'assets/embed.html'
+        embed_src = pdfshowOption['notebook_url'] \
+            + 'assets/web/embed.html'
         frameJS = f"""
 {p_tag_start}See no PDF below? Go to {files_hyperlink} directly! {p_tag_end}
 <iframe class="PDFframe"

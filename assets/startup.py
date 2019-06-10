@@ -3,7 +3,7 @@
 
 from IPython.core import page
 from IPython.display import display, HTML, Markdown, clear_output
-from assets.pdfshow import pdf_autoreload_script
+from assets.pdfshow import pdf_autoreload_html
 from assets.specs import startupOption, pdfshowOption
 import os
 import re
@@ -159,29 +159,11 @@ def initialize():
         mathjax_macros += tex_macros.read()
 
     # Inline image & more styles
-    # Extra identation to trick Markdown into rendering it as a whole paragraph
-    html_style = """
-        <link rel="stylesheet" type="text/css"
-            href="assets/code-prettify/codestyle.css">
-        <script type="text/javascript"
-            src="assets/code-prettify/google-code-prettify/run_prettify.js">
-        </script>
-        <style>
-            img.inline_img {
-                display: unset;
-                margin-top: unset;
-            }
-            .MathJax_Display {
-                margin: 6px;
-            }
-            .dataframe td {
-                white-space: nowrap;
-            }
-        </style>
-        """
+    with open('assets/web/style.html', 'r') as style_html:
+        html_style = style_html.read()
 
     # Custom js from `notebook_init.js`
-    with open('assets/notebook_init.js', 'r') as init_js:
+    with open('assets/web/notebook_init.js', 'r') as init_js:
         js_strings = init_js.read()
     get_ipython().run_cell_magic(  # noqa: F821
         'javascript', '',
@@ -197,7 +179,7 @@ def initialize():
     display(Markdown(markdown_string))
     display(HTML(
         html_style
-        + pdf_autoreload_script()
+        + pdf_autoreload_html()
     ))
 
     if startupOption['reveal']:
