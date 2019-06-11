@@ -1,15 +1,66 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# Basic dependencies
+from assets.specs import pdfshowOption
 from IPython.display import display, HTML
 from urllib.parse import urljoin
-from assets.specs import pdfshowOption
 import os.path
 import base64
+# For launching server subprocess
+import shlex
+import subprocess
+import requests
 
 
 def pdf_autoreload_html():
-    return """<script src="assets/web/frame_loaded.js"></script>"""
+    frame_loaded_jsfile = "assets/web/frame_loaded.js"
+    return f"""<script src="{frame_loaded_jsfile}"></script>"""
+
+
+def initialize_server_port(port: int):
+    server_proc = subprocess.Popen(
+        shlex.split(
+            f"python3 -u assets/server.py {port}"
+            # `-u` necessary for line buffering
+        ),
+        stdout=subprocess.PIPE,
+        universal_newlines=True
+    )
+    server_port = int(server_proc.stdout.readline().strip())
+    if server_port > 0:
+        return server_port
+    else:
+        raise ChildProcessError(
+            f'server failed, returned port: {server_port}'
+        )
+
+
+def url_wrap(url: str):
+    # do not serve
+    if not pdfshowOption['serve']:
+        return url
+
+    # file served
+    def url_by_port():
+        return f"http://127.0.0.1:{pdfshowOption['server_port']}/{url}"
+
+    if pdfshowOption['server_port'] != 0:
+        try:
+            req = requests.head(
+                url_by_port()
+            )
+            req.raise_for_status()
+            return url_by_port()
+        except requests.exceptions.ConnectionError:
+            pass
+
+    # (re-)initialize server
+    pdfshowOption['server_port'] = initialize_server_port(
+        pdfshowOption['server_port']
+    )
+
+    return url_by_port()
 
 
 class pdfGet(object):
@@ -27,7 +78,7 @@ class pdfGet(object):
         if (type(pdf_dir) is str
             and os.path.isfile(pdf_dir)
                 and os.path.splitext(pdf_dir)[-1].lower() == '.pdf'):
-                    self.pdfDir = pdf_dir
+            self.pdfDir = pdf_dir
         else:
             self.pdfDir = 'assets/web/maxwell.pdf'
 
@@ -69,8 +120,7 @@ Blame jupyter! </a></p>"""
 
         files_hyperlink = f'<a href="{self.fullDir}">{self.pdfDir}</a>'
         iframe_attrs = f'width="100%" frameborder="0" name="{self.pdfDir}"'
-        embed_src = pdfshowOption['notebook_url'] \
-            + 'assets/web/embed.html'
+        embed_src = url_wrap('assets/embed.html')
         frameJS = f"""
 {p_tag_start}See no PDF below? Go to {files_hyperlink} directly! {p_tag_end}
 <iframe class="PDFframe"

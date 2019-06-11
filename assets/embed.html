@@ -106,15 +106,12 @@
                         parent.$("iframe[class=PDFframe]").trigger("onload");
                         console.log('Height adjusted.');
                     } catch (e) {
-                        if (logMarker == "Reload") {
-                            var data_pkg = [
-                                pdf_url, window.document.body.scrollHeight
-                            ];
-                            parent.postMessage(data_pkg, "*");
-                            console.log('Height posted:', data_pkg);
-                        } else {
-                            console.log('Page height unchanged; reason:', e);
-                        }
+                        console.log('Page height unchanged:', e);
+                        var data_pkg = [
+                            pdf_url, window.document.body.scrollHeight
+                        ];
+                        parent.postMessage(data_pkg, "*");
+                        console.log('Height posted:', data_pkg);
                     }
                 });
             },
@@ -124,9 +121,10 @@
                 loaded = false;
             }
         );
-        if (!loaded) {
-            return false;
+        if (loaded != false) {
+            loaded = true
         }
+        return loaded;
     }
 
     var loadingTask = pdfjs.getDocument({

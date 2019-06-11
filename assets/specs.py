@@ -19,6 +19,8 @@ if __name__ != '__main__':  # when IMPORTED
 
     pdfshowOption = {
         'mini': False,
+        'serve': True,
+        'server_port': 0,
         'notebook_url': ''
     }
 
