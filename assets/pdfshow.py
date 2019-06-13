@@ -13,9 +13,16 @@ import subprocess
 import requests
 
 
-def pdf_autoreload_html():
+def pdf_helper_html():
+    listener_parent_jsfile = "assets/web/listener_parent.js"
     frame_loaded_jsfile = "assets/web/frame_loaded.js"
-    return f"""<script src="{frame_loaded_jsfile}"></script>"""
+    return "\n".join([
+        f"""<script src="{js_file}"></script>"""
+        for js_file in [
+            listener_parent_jsfile,
+            frame_loaded_jsfile
+        ]
+    ])
 
 
 def initialize_server_port(port: int):
@@ -97,20 +104,8 @@ class pdfGet(object):
         # Listen for page dimensions
         get_ipython().run_cell_magic('javascript', '',  # noqa: F821
             f"""
-window.addEventListener('message', function(e) {{
-    if (e.data == 'based64request') {{
-        framePostData(
-            "{self.pdfDir}",
-            ["{self.pdfDir}", "{self.pdfData}"]
-        );
-    }} else {{
-        frameAction("{self.pdfDir}", function (oneframe) {{
-            if (e.data[0] == oneframe.name) {{
-                oneframe.height = e.data[1] + "px";
-            }}
-        }});
-    }}
-}});""")  # noqa: E128
+addListenerParent("{self.pdfDir}", "{self.pdfData}");
+""")  # noqa: E128
 
         # HTML assets
         p_tag_start = '<p style="font-size: 12px; font-style: italic;">'

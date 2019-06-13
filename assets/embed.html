@@ -70,12 +70,6 @@
 
     pdfLinkService.setViewer(pdfViewer);
 
-    // Scaling
-    container.addEventListener('pagesinit', function() {
-        // We can use pdfViewer now, e.g. let's change default scale.
-        pdfViewer.currentScaleValue = 'page-width';
-    });
-
     // Asynchronous download of PDF
     function pdfLoad(loadingTask, logMarker) {
         loadingTask.promise.then(
@@ -91,14 +85,11 @@
                 pdf.getPage(pageNumber).then(function(page) {
                     // console.log('Page loaded!');
 
+                    // Scaling
+                    pdfViewer.currentScaleValue = 'page-width';
                     // Prepare canvas using PDF page dimensions
                     var viewerCore = document.getElementById('viewer');
-                    // Resize according to window width
-                    // full width may be too wide; choose a factor < 1.0
-                    viewerCore.width = window.innerWidth * 0.8;
-                    var viewport = page.getViewport(
-                        viewerCore.width / page.getViewport(1.0).width
-                    );
+                    var viewport = page.getViewport();
                     // height determined by document
                     viewerCore.height = viewport.height;
 
@@ -117,7 +108,7 @@
             },
             function(reason) {
                 console.log(logMarker, "failed!");
-                parent.postMessage('based64request', "*");
+                parent.postMessage('base64request', "*");
                 loaded = false;
             }
         );

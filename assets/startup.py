@@ -3,7 +3,7 @@
 
 from IPython.core import page
 from IPython.display import display, HTML, Markdown, clear_output
-from assets.pdfshow import pdf_autoreload_html
+from assets.pdfshow import pdf_helper_html
 from assets.specs import startupOption, pdfshowOption
 import os
 import re
@@ -179,7 +179,7 @@ def initialize():
     display(Markdown(markdown_string))
     display(HTML(
         html_style
-        + pdf_autoreload_html()
+        + pdf_helper_html()
     ))
 
     if startupOption['reveal']:
