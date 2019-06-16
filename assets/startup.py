@@ -157,6 +157,8 @@ def initialize():
         mathjax_macros = tex_macros.read()
     with open('latex/mathjax.tex', 'r') as tex_macros:
         mathjax_macros += tex_macros.read()
+    # Additional escaping required
+    mathjax_macros = mathjax_macros.replace(r"\!", r"\\!")
 
     # Inline image & more styles
     with open('assets/web/style.html', 'r') as style_html:

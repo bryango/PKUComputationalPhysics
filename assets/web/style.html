@@ -12,4 +12,12 @@
     .dataframe td {
         white-space: nowrap;
     }
+    /* Fix page right padding bug, */
+    /* ... see: <https://github.com/sweetalert2/sweetalert2/issues/678> */
+    body {
+        padding-right: 0 !important;
+    }
+    html {
+        overflow-y: hidden;
+    }
 </style>
