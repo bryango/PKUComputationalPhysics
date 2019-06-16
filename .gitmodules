@@ -2,3 +2,6 @@
     path = assets/pdfjs-dist
     url = https://github.com/mozilla/pdfjs-dist.git
     shallow = true
+[submodule "templates"]
+	path = templates
+	url = git@github.com:bryango/Templates.git
